@@ -1,50 +1,22 @@
-# React + TypeScript + Vite
+Github Users Search Tool
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+You need to create a github users search tool.
+On the main page there should be an input field where you need to enter a username.
+Below should be a filtered list of users.
+There should be an implementation of pagination (infinite scroll).
 
-Currently, two official plugins are available:
+Clicking on a row should open the user's page with additional information about him:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- avatar image,
+- name,
+- followers,
+- following,
+- company,
+- email,
+- blog
 
-## Expanding the ESLint configuration
+This project should be written using React and Typescript.
+We would also appreciate the use of any state management and UI libraries.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+REST API doc: https://docs.github.com/en/rest
+Graphql API doc: https://api.github.com/graphql
