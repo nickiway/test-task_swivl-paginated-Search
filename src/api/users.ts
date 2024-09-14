@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import { Octokit } from "octokit";
 import { UserListItem } from "../interfaces/user/search-item.interface";
 

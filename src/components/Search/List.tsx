@@ -1,47 +1,21 @@
-import InfiniteScroll from "react-infinite-scroll-component";
+import InfiniteScroll from "react-infinite-scroller";
 
 import Card from "./Card";
 import { CircularProgress, Grid2 as Grid } from "@mui/material";
-
-import { getPaginatedData } from "../../api/users";
-import { useEffect, useState } from "react";
-import { UserListItem } from "../../interfaces/user/search-item.interface";
+import useSearch from "../../hooks/useSearch";
 
 export default function List() {
-  const [data, setData] = useState<UserListItem[]>([]);
-  const [hasMore, setHasMore] = useState<boolean>(true);
-  const [url, setUrl] = useState<string>("/search/users");
-
-  const fetchData = async () => {
-    try {
-      const { data, hasMore, url: nextUrl } = await getPaginatedData(url, "a");
-
-      setUrl(nextUrl);
-      setData((prevData) => [...prevData, ...data]);
-      setHasMore(hasMore);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
+  const { data, fetchData, hasMore } = useSearch();
   return (
     <InfiniteScroll
-      style={{
-        height: "100vh",
-        overflow: "auto",
-      }}
-      dataLength={data.length}
-      next={fetchData}
+      pageStart={0}
+      loadMore={fetchData}
       hasMore={hasMore}
       loader={<CircularProgress />}
     >
       <Grid container spacing={5}>
-        {data.map((item) => (
-          <Grid key={item.id} size={4}>
+        {data.map((item, index) => (
+          <Grid key={index} size={4}>
             <Card data={item} />
           </Grid>
         ))}
