@@ -1,15 +1,11 @@
-/* general */
 body {
   background-color: #f4f4f4;
 }
 
-/* containers */
 .centered {
   display: flex;
   justify-content: center;
 }
-
-/* search bar */
 
 .search-bar {
   width: 100%;
@@ -35,8 +31,6 @@ body {
 .search-bar .MuiOutlinedInput-root.Mui-focused fieldset {
   border-color: #1976d2;
 }
-
-/* search card */
 
 .search-card {
   max-width: 345px;
