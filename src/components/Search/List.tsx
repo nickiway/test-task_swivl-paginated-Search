@@ -7,7 +7,6 @@ import { memo } from "react";
 export default memo(function List() {
   const data = useAppSelector((state) => state.search.data);
 
-  console.log("render list");
   return (
     <Grid container spacing={5}>
       {data.map((item, index) => (

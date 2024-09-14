@@ -1,24 +1,36 @@
 import InfiniteScroll from "react-infinite-scroller";
 
 import useSearch from "../hooks/useSearch";
-import { CircularProgress, Container } from "@mui/material";
+
 import Search from "../components/Search/Search";
 import List from "../components/Search/List";
+import { Container, Typography } from "@mui/material";
+import { Loader } from "../components/shared/Loader";
 
 export default function SearchPage() {
-  const { fetchData, status } = useSearch();
+  const { fetch, status, error } = useSearch();
 
-  console.log("render search page");
+  const renderLoading = () => {
+    if (error)
+      return (
+        <Typography color="error" variant="h6" align="center">
+          {error}
+        </Typography>
+      );
+
+    return <Loader />;
+  };
 
   return (
     <Container>
       <Search />
+
       <InfiniteScroll
         useWindow={true}
         pageStart={0}
-        loadMore={fetchData}
+        loadMore={fetch}
         hasMore={status.hasMore}
-        loader={<CircularProgress key={0} />}
+        loader={renderLoading()}
       >
         <List />
       </InfiniteScroll>

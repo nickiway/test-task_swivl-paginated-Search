@@ -8,10 +8,6 @@ export const getUserById = async (id: number) => {
   return await octokit.request(`GET /user/${id}`);
 };
 
-export const getUsers = async (query: string) => {
-  return await octokit.request("GET /search/users", { q: query });
-};
-
 export const getPaginatedData = async (url: string, query: string) => {
   const nextPattern = /(?<=<)([\S]*)(?=>; rel="Next")/i;
   let data: UserListItem[] = [];
@@ -20,11 +16,11 @@ export const getPaginatedData = async (url: string, query: string) => {
   const response = await octokit.request(`GET ${url}`, {
     per_page: 100,
     q: query,
+
     headers: {
       "X-GitHub-Api-Version": "2022-11-28",
     },
   });
-
   const parsedData = parseData(response.data) as UserListItem[];
   data = [...data, ...parsedData];
 
@@ -40,7 +36,7 @@ export const getPaginatedData = async (url: string, query: string) => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function parseData(data: any) {
+export function parseData(data: any) {
   if (Array.isArray(data)) {
     return data;
   }

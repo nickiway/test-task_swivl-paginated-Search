@@ -1,8 +1,53 @@
+/* general */
 body {
   background-color: #f4f4f4;
 }
 
+/* containers */
 .centered {
   display: flex;
   justify-content: center;
+}
+
+/* search bar */
+
+.search-bar {
+  width: 100%;
+  background-color: #fff;
+  border-radius: 8px;
+  position: sticky !important;
+  top: 0;
+  z-index: 10;
+}
+
+.search-bar .MuiOutlinedInput-root {
+  border-radius: 8px;
+}
+
+.search-bar .MuiOutlinedInput-root fieldset {
+  border-color: #ccc;
+}
+
+.search-bar .MuiOutlinedInput-root:hover fieldset {
+  border-color: #888;
+}
+
+.search-bar .MuiOutlinedInput-root.Mui-focused fieldset {
+  border-color: #1976d2;
+}
+
+/* search card */
+
+.search-card {
+  max-width: 345px;
+  margin: auto;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  transition: transform 0.2s ease-in-out;
+  text-decoration: none;
+}
+
+.search-card:hover {
+  transform: scale(1.05);
 }

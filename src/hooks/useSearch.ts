@@ -6,9 +6,12 @@ import useDebounce from "./useDebounce";
 import { getPaginatedData } from "../api/users";
 import { setSearchData, resetData } from "../lib/redux/slices/searchSlice";
 
+interface Status {
+  hasMore: boolean;
+}
+
 // prevent error from api of empty query string
 const DEFAULT_SEARCH_TERM = "a";
-
 const BASIC_URL = "/search/users";
 
 export default function useSearch() {
@@ -16,13 +19,14 @@ export default function useSearch() {
   const expression = useAppSelector((state) => state.search.expression);
 
   const url = useRef<string>(BASIC_URL);
-  const debouncedSearchTerm = useDebounce<string>(expression, 700);
-  const [status, setStatus] = useState<Record<string, boolean>>({
+
+  const debouncedSearchTerm = useDebounce<string>(expression);
+  const [status, setStatus] = useState<Status>({
     hasMore: true,
   });
+  const [error, setError] = useState<string | null>("");
 
-  console.log("render use search");
-  const fetchData = useCallback(async () => {
+  const fetch = useCallback(async () => {
     try {
       const {
         data,
@@ -34,12 +38,11 @@ export default function useSearch() {
       );
 
       url.current = next;
-
-      console.log(next);
       dispatch(setSearchData(data));
       setStatus({ hasMore });
     } catch (error) {
-      console.error(error);
+      setError("User's loading failed");
+      console.error("Fetch error", error);
     }
   }, [debouncedSearchTerm, dispatch]);
 
@@ -49,5 +52,5 @@ export default function useSearch() {
     setStatus({ hasMore: true });
   }, [debouncedSearchTerm, dispatch]);
 
-  return { fetchData, status };
+  return { fetch, status, error };
 }
