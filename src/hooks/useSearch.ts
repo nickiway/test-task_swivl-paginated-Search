@@ -10,11 +10,17 @@ interface Status {
   hasMore: boolean;
 }
 
+interface UseSearchResult {
+  fetch: () => void;
+  status: Status;
+  error: string | null;
+}
+
 // prevent error from api of empty query string
 const DEFAULT_SEARCH_TERM = "a";
 const BASIC_URL = "/search/users";
 
-export default function useSearch() {
+export default function useSearch(): UseSearchResult {
   const dispatch = useAppDispatch();
   const expression = useAppSelector((state) => state.search.expression);
 

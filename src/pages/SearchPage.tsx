@@ -2,10 +2,11 @@ import InfiniteScroll from "react-infinite-scroller";
 
 import useSearch from "../hooks/useSearch";
 
-import Search from "../components/Search/Search";
-import List from "../components/Search/List";
 import { Container, Typography } from "@mui/material";
 import { Loader } from "../components/shared/Loader";
+
+import Search from "../components/Search/Search";
+import List from "../components/Search/List";
 
 export default function SearchPage() {
   const { fetch, status, error } = useSearch();
@@ -18,7 +19,7 @@ export default function SearchPage() {
         </Typography>
       );
 
-    return <Loader />;
+    return <Loader key={0} />;
   };
 
   return (
