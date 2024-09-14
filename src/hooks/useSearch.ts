@@ -1,48 +1,53 @@
-import { useAppSelector } from "./redux";
+import { useAppDispatch, useAppSelector } from "./redux";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useDebounce from "./useDebounce";
 
 import { getPaginatedData } from "../api/users";
-import type { UserListItem } from "../interfaces/user/search-item.interface";
+import { setSearchData, resetData } from "../lib/redux/slices/searchSlice";
 
-// prevent error of api of empty query string
+// prevent error from api of empty query string
 const DEFAULT_SEARCH_TERM = "a";
 
+const BASIC_URL = "/search/users";
+
 export default function useSearch() {
-  const { expression } = useAppSelector((state) => state.search);
+  const dispatch = useAppDispatch();
+  const expression = useAppSelector((state) => state.search.expression);
+
+  const url = useRef<string>(BASIC_URL);
   const debouncedSearchTerm = useDebounce<string>(expression, 700);
+  const [status, setStatus] = useState<Record<string, boolean>>({
+    hasMore: true,
+  });
 
-  const [data, setData] = useState<UserListItem[]>([]);
-  const [hasMore, setHasMore] = useState<boolean>(true);
-  const [url, setUrl] = useState<string>("/search/users");
-
-  console.log("render");
+  console.log("render use search");
   const fetchData = useCallback(async () => {
     try {
-      console.log(url);
       const {
         data,
         hasMore,
-        url: nextUrl,
+        url: next,
       } = await getPaginatedData(
-        url,
+        url.current,
         debouncedSearchTerm.trim() || DEFAULT_SEARCH_TERM
       );
 
-      setUrl(nextUrl);
-      setData((prevData) => [...prevData, ...data]);
-      setHasMore(hasMore);
+      url.current = next;
+
+      console.log(next);
+      dispatch(setSearchData(data));
+      setStatus({ hasMore });
     } catch (error) {
       console.error(error);
     }
-  }, [debouncedSearchTerm, url]);
+  }, [debouncedSearchTerm, dispatch]);
 
   useEffect(() => {
-    setUrl("/search/users");
-    setData([]);
-    fetchData();
-  }, [debouncedSearchTerm]);
+    url.current = BASIC_URL;
+    dispatch(resetData());
+    setStatus({ hasMore: true });
+  }, [debouncedSearchTerm, dispatch]);
 
-  return { fetchData, data, hasMore };
+  return { fetchData, status };
 }

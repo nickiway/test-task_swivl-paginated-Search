@@ -1,25 +1,20 @@
-import InfiniteScroll from "react-infinite-scroller";
+import { useAppSelector } from "../../hooks/redux";
 
+import { Grid2 as Grid } from "@mui/material";
 import Card from "./Card";
-import { CircularProgress, Grid2 as Grid } from "@mui/material";
-import useSearch from "../../hooks/useSearch";
+import { memo } from "react";
 
-export default function List() {
-  const { data, fetchData, hasMore } = useSearch();
+export default memo(function List() {
+  const data = useAppSelector((state) => state.search.data);
+
+  console.log("render list");
   return (
-    <InfiniteScroll
-      pageStart={0}
-      loadMore={fetchData}
-      hasMore={hasMore}
-      loader={<CircularProgress />}
-    >
-      <Grid container spacing={5}>
-        {data.map((item, index) => (
-          <Grid key={index} size={4}>
-            <Card data={item} />
-          </Grid>
-        ))}
-      </Grid>
-    </InfiniteScroll>
+    <Grid container spacing={5}>
+      {data.map((item, index) => (
+        <Grid key={index} size={4}>
+          <Card data={item} />
+        </Grid>
+      ))}
+    </Grid>
   );
-}
+});
