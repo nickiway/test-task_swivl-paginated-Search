@@ -4,15 +4,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import useDebounce from "./useDebounce";
 
 import { getPaginatedData } from "../api/users";
-import { setSearchData, resetData } from "../lib/redux/slices/searchSlice";
-
-interface Status {
-  hasMore: boolean;
-}
+import {
+  setSearchData,
+  resetData,
+  setStatus,
+} from "../lib/redux/slices/searchSlice";
 
 interface UseSearchResult {
   fetch: () => void;
-  status: Status;
   error: string | null;
 }
 
@@ -25,11 +24,10 @@ export default function useSearch(): UseSearchResult {
   const expression = useAppSelector((state) => state.search.expression);
 
   const url = useRef<string>(BASIC_URL);
+  const isFirstRender = useRef<boolean>(true);
 
   const debouncedSearchTerm = useDebounce<string>(expression);
-  const [status, setStatus] = useState<Status>({
-    hasMore: true,
-  });
+
   const [error, setError] = useState<string | null>("");
 
   const fetch = useCallback(async () => {
@@ -45,7 +43,8 @@ export default function useSearch(): UseSearchResult {
 
       url.current = next;
       dispatch(setSearchData(data));
-      setStatus({ hasMore });
+
+      dispatch(setStatus({ hasMore }));
     } catch (error) {
       setError("User's loading failed");
       console.error("Fetch error", error);
@@ -53,10 +52,15 @@ export default function useSearch(): UseSearchResult {
   }, [debouncedSearchTerm, dispatch]);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     url.current = BASIC_URL;
     dispatch(resetData());
-    setStatus({ hasMore: true });
+    dispatch(setStatus({ hasMore: true }));
   }, [debouncedSearchTerm, dispatch]);
 
-  return { fetch, status, error };
+  return { fetch, error };
 }

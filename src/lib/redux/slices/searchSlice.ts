@@ -1,14 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserListItem } from "../../../interfaces/user/search-item.interface";
 
+export interface Status {
+  hasMore: boolean;
+}
+
 interface SearchState {
   expression: string;
   data: UserListItem[];
+  hasMore: Status;
 }
 
 const initialState: SearchState = {
   expression: "",
   data: [],
+  hasMore: { hasMore: true },
 };
 
 const searchSlice = createSlice({
@@ -29,12 +35,16 @@ const searchSlice = createSlice({
       state.data = [...state.data, ...action.payload];
     },
 
+    setStatus: (state: SearchState, action: PayloadAction<Status>) => {
+      state.hasMore = action.payload;
+    },
+
     resetData: (state) => {
       state.data = [];
     },
   },
 });
 
-export const { setSearchExpression, setSearchData, resetData } =
+export const { setSearchExpression, setSearchData, resetData, setStatus } =
   searchSlice.actions;
 export default searchSlice.reducer;

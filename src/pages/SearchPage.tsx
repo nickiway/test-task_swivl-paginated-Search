@@ -1,5 +1,7 @@
 import InfiniteScroll from "react-infinite-scroller";
 
+import { useAppSelector } from "../hooks/redux";
+
 import useSearch from "../hooks/useSearch";
 
 import { Container, Typography } from "@mui/material";
@@ -9,7 +11,8 @@ import Search from "../components/Search/Search";
 import List from "../components/Search/List";
 
 export default function SearchPage() {
-  const { fetch, status, error } = useSearch();
+  const { fetch, error } = useSearch();
+  const status = useAppSelector((state) => state.search.hasMore);
 
   const renderLoading = () => {
     if (error)
@@ -27,7 +30,7 @@ export default function SearchPage() {
       <Search />
 
       <InfiniteScroll
-        useWindow={true}
+        useWindow
         pageStart={0}
         loadMore={fetch}
         hasMore={status.hasMore}
