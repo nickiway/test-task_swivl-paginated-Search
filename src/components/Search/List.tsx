@@ -8,7 +8,7 @@ export default memo(function List() {
   const data = useAppSelector((state) => state.search.data);
 
   return (
-    <Grid container spacing={5}>
+    <Grid container spacing={5} sx={{ marginTop: "10px" }}>
       {data.map((item, index) => (
         <Grid key={index} size={4}>
           <Card data={item} />

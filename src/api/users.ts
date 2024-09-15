@@ -13,9 +13,12 @@ export const getPaginatedData = async (url: string, query: string) => {
   let data: UserListItem[] = [];
   let hasMore: boolean = false;
 
+  // set query to search only via login
+  const q = query !== "" ? query + " in:login" : query;
+
   const response = await octokit.request(`GET ${url}`, {
     per_page: 100,
-    q: query,
+    q,
 
     headers: {
       "X-GitHub-Api-Version": "2022-11-28",

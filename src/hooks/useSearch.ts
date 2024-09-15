@@ -21,7 +21,7 @@ export default function useSearch(): UseSearchResult {
 
   const debouncedSearchTerm = useDebounce<string>(expression);
 
-  const BASIC_URL = debouncedSearchTerm ? "/search/users" : "/users";
+  const BASIC_URL = debouncedSearchTerm.trim() ? "/search/users" : "/users";
 
   const url = useRef<string>(BASIC_URL);
   const isFirstRender = useRef<boolean>(true);
