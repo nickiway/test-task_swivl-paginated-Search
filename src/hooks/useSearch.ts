@@ -15,18 +15,16 @@ interface UseSearchResult {
   error: string | null;
 }
 
-// prevent error from api of empty query string
-const DEFAULT_SEARCH_TERM = "a";
-const BASIC_URL = "/search/users";
-
 export default function useSearch(): UseSearchResult {
   const dispatch = useAppDispatch();
   const expression = useAppSelector((state) => state.search.expression);
 
+  const debouncedSearchTerm = useDebounce<string>(expression);
+
+  const BASIC_URL = debouncedSearchTerm ? "/search/users" : "/users";
+
   const url = useRef<string>(BASIC_URL);
   const isFirstRender = useRef<boolean>(true);
-
-  const debouncedSearchTerm = useDebounce<string>(expression);
 
   const [error, setError] = useState<string | null>("");
 
@@ -36,10 +34,7 @@ export default function useSearch(): UseSearchResult {
         data,
         hasMore,
         url: next,
-      } = await getPaginatedData(
-        url.current,
-        debouncedSearchTerm.trim() || DEFAULT_SEARCH_TERM
-      );
+      } = await getPaginatedData(url.current, debouncedSearchTerm.trim());
 
       url.current = next;
       dispatch(setSearchData(data));
@@ -60,6 +55,7 @@ export default function useSearch(): UseSearchResult {
     url.current = BASIC_URL;
     dispatch(resetData());
     dispatch(setStatus({ hasMore: true }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchTerm, dispatch]);
 
   return { fetch, error };
